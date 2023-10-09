@@ -1,0 +1,1129 @@
+import 'dart:ui';
+
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:provider/provider.dart';
+import 'package:raihanrabbani001/app_locale.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+void main() {
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => ThemeViewModel(),),
+      ChangeNotifierProvider(create: (_) => AppLang(),),],
+    child: const MyApp(),
+  ));
+}
+
+class ThemeViewModel with ChangeNotifier {
+  double _dx = 0;
+  double get dx => _dx;
+
+  double _dy = 0;
+  double get dy => _dy;
+
+  Future<void> updateCursorPosition(Offset newPos) async {
+    await Future.delayed(const Duration(milliseconds: 50));
+    _dx = newPos.dx;
+    _dy = newPos.dy;
+    notifyListeners();
+  }
+
+  int _indexJobExperince = 0;
+  int get indexJobExperince => _indexJobExperince;
+
+  void setIndexJobExperience(int index) {
+    _indexJobExperince = index;
+    notifyListeners();
+  }
+
+  int _indexProject = 0;
+  int get indexProject => _indexProject;
+
+  void setIndexProject(int index) {
+    _indexProject = index;
+    notifyListeners();
+  }
+
+  int _indexAchievement = 0;
+  int get indexAchievement => _indexAchievement;
+
+  void setIndexAchievement(int index) {
+    _indexAchievement = index;
+    notifyListeners();
+  }
+
+  static List<Color> colors = [
+    Colors.purple,
+    Colors.amber,
+    Colors.red,
+    Colors.green,
+    Colors.blue,
+  ];
+
+  final Color _mainColor = colors.elementAt(0);
+  Color get mainColor => _mainColor;
+
+  void setMainColor(){
+
+  }
+}
+
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final FlutterLocalization _localization = FlutterLocalization.instance;
+
+  @override
+  void initState() {
+    _localization.init(
+      mapLocales: [
+        const MapLocale(
+          'en',
+          AppLocale.EN,
+          countryCode: 'US',
+        ),
+        const MapLocale(
+          'id',
+          AppLocale.ID,
+          countryCode: 'ID',
+        ),
+      ],
+      initLanguageCode: 'en',
+    );
+    _localization.onTranslatedLanguage = _onTranslatedLanguage;
+    super.initState();
+  }
+
+  void _onTranslatedLanguage(Locale? locale) {
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      supportedLocales: _localization.supportedLocales,
+      localizationsDelegates: _localization.localizationsDelegates,
+      debugShowCheckedModeBanner: false,
+      title: 'Rsite',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.purple,
+          brightness: Brightness.dark,
+        ),
+        textTheme: GoogleFonts.interTextTheme(
+                ThemeData(brightness: Brightness.dark).textTheme)
+            .copyWith(
+          displayLarge: const TextStyle(fontWeight: FontWeight.w900, height: 1),
+          titleMedium:
+              const TextStyle(fontWeight: FontWeight.w700, letterSpacing: 1),
+          titleSmall:
+              const TextStyle(fontWeight: FontWeight.w800, letterSpacing: 1),
+          bodyLarge: const TextStyle(fontWeight: FontWeight.w400),
+          bodySmall: const TextStyle(fontWeight: FontWeight.w300),
+        ),
+        useMaterial3: true,
+      ),
+      home: const LayoutView(),
+    );
+  }
+}
+
+class ContactItem {
+  final String url;
+  final Widget icon;
+  ContactItem({required this.url, required this.icon});
+}
+
+class LayoutView extends StatelessWidget {
+  const LayoutView({super.key});
+
+  void _url(String url) {
+    launchUrl(Uri.parse(url));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ColorScheme colorScheme = Theme.of(context).colorScheme;
+    TextTheme textTheme = Theme.of(context).textTheme;
+    TextStyle bodyLarge = textTheme.bodyLarge!
+        .copyWith(color: colorScheme.onSurface.withOpacity(0.5));
+    TextStyle bodySmall = textTheme.bodySmall!
+        .copyWith(color: colorScheme.onSurface.withOpacity(0.5));
+    TextStyle bodyLargeExperience = textTheme.bodyLarge!
+        .copyWith(color: colorScheme.onSurface.withOpacity(0.7), fontSize: 14);
+    TextStyle titleSmall = textTheme.titleSmall!
+        .copyWith(color: colorScheme.onSurface.withOpacity(0.5));
+    TextStyle tinyLabel = textTheme.labelSmall!
+        .copyWith(color: colorScheme.onSurface.withOpacity(0.5));
+    Size size = MediaQuery.of(context).size;
+    List<String> roleItems = [
+      AppLocale.role1.getString(context),
+      AppLocale.role2.getString(context),
+    ];
+    List<ContactItem> contactItems = [
+      ContactItem(
+          url: 'https://github.com/raihanrabbani001',
+          icon: const FaIcon(FontAwesomeIcons.github)),
+      ContactItem(
+          url: 'https://www.linkedin.com/in/raihan-rabbani-48364023b',
+          icon: const FaIcon(FontAwesomeIcons.linkedin)),
+      ContactItem(
+          url: 'https://www.instagram.com/_rraihan01',
+          icon: const FaIcon(FontAwesomeIcons.instagram)),
+      ContactItem(
+          url: 'mailto:raihanrabbani.bs@gmail.com',
+          icon: const FaIcon(FontAwesomeIcons.envelope)),
+      ContactItem(
+          url: 'https://wa.me/6281220188463',
+          icon: const FaIcon(FontAwesomeIcons.whatsapp)),
+    ];
+    List<Map<String, dynamic>> jobExperiences = [
+      {
+        'date': 'Nov 2017 - Dec 2017',
+        'title': 'PT Pertamina Geothermal Energy Area Kamojang',
+        'role': 'Field Industrial Practice - IT Support',
+        'jobdesc': AppLocale.experience1.getString(context),
+        'badgeSkill': [
+          'Computer Assembly',
+          'OS Installation',
+          'Applications',
+          'Local Area Network',
+        ],
+        'link':
+            'https://www.google.com/search?q=PT+Pertamina+Geothermal+Energy+Area+Kamojang',
+      },
+      {
+        'date': 'Jul 2021 - Jul 2022',
+        'title': 'SMK Plus Pratama Adi',
+        'role': 'Teacher',
+        'jobdesc': AppLocale.experience2.getString(context),
+        'badgeSkill': [
+          'C++',
+          'Java',
+          'Object Oriented Programming',
+          'MySQL',
+          'Teaching',
+          'Guiding',
+        ],
+        'link': 'https://www.google.com/search?q=SMK+Plus+Pratama+Adi',
+      },
+      {
+        'date': 'Jul 2019 - Jul 2023',
+        'title': 'Apotek Riefara',
+        'role': 'Staff - IT Support',
+        'jobdesc': AppLocale.experience3.getString(context),
+        'badgeSkill': [
+          'Running Text',
+          'Arduino',
+          'Visual Basic .NET',
+        ],
+        'link': 'https://www.google.com/search?q=Apotek+Riefara',
+      },
+      {
+        'date': 'Jul 2019 - Jul 2023',
+        'title': 'Klinik Pratama Rahmah Ermansyah',
+        'role': 'Staff - IT Support',
+        'jobdesc': AppLocale.experience4.getString(context),
+        'badgeSkill': [
+          'MikroTik',
+          'CCTV',
+          'Asset Management',
+          'Troubleshooting',
+          'Maintenance',
+        ],
+        'link':
+            'https://www.google.com/search?q=Klinik+Pratama+Rahmah+Ermansyah',
+      }
+    ];
+    
+
+    List<Map<String, dynamic>> achievements = [
+      {
+        'title': 'Fiber Optik',
+        'thumbnail': 'images/certificates/fo.png',
+        'organizer': 'Netkrom Academy',
+        'date': 'Jul 13, 2018',
+        'link':
+            'https://www.google.com/search?q=netkrom+verify+certification+code+Fiber+Optik+Net_FO-AA089',
+      },
+      {
+        'title': 'MikroTik Certified Network Associate',
+        'thumbnail': 'images/certificates/mtcna.png',
+        'organizer': 'Netkrom Academy',
+        'date': 'Feb 19, 2019',
+        'link':
+            'https://www.google.com/search?q=netkrom+verify+certification+code+Fiber+Optik+Net_FO-AA089',
+      },
+      {
+        'title': 'Memulai Pemrograman Dengan Dart',
+        'thumbnail': 'images/certificates/mpdd.png',
+        'organizer': 'Dicoding',
+        'date': 'Jun 07, 2022',
+        'link': 'https://www.dicoding.com/certificates/NVP7KOY94ZR0',
+      },
+      {
+        'title': 'Belajar Membuat Aplikasi Flutter untuk Pemula',
+        'thumbnail': 'images/certificates/bmafp.png',
+        'organizer': 'Dicoding',
+        'date': 'Jul 30, 2022',
+        'link': 'https://www.dicoding.com/certificates/L4PQ4W827XO1',
+      },
+      {
+        'title': 'Belajar Dasar Pemrograman JavaScript',
+        'thumbnail': 'images/certificates/bdpj.png',
+        'organizer': 'Dicoding',
+        'date': 'Sep 28, 2022',
+        'link': 'https://www.dicoding.com/certificates/2VX31GKONZYQ',
+      },
+      {
+        'title': 'Belajar Dasar Pemrograman Web',
+        'thumbnail': 'images/certificates/bdpw.png',
+        'organizer': 'Dicoding',
+        'date': 'Oct 06, 2022',
+        'link': 'https://www.dicoding.com/certificates/EYX42D6KWZDL',
+      },
+      {
+        'title': 'Belajar Membuat Front-End Web untuk Pemula',
+        'thumbnail': 'images/certificates/bmfep.png',
+        'organizer': 'Dicoding',
+        'date': 'Oct 15, 2022',
+        'link': 'https://www.dicoding.com/certificates/NVP799GWVZR0',
+      },
+      {
+        'title': 'Dasar-Dasar Dukungan Teknis',
+        'thumbnail': 'images/certificates/dddt.png',
+        'organizer': 'Coursera',
+        'date': 'May 19, 2022',
+        'link': 'https://coursera.org/verify/QEHU8XJFSMKG',
+      },
+      {
+        'title': 'Seluk Beluk Jaringan Komputer',
+        'thumbnail': 'images/certificates/sbjk.png',
+        'organizer': 'Coursera',
+        'date': 'May 20, 2022',
+        'link': 'https://coursera.org/verify/CG2Q9Z7F9UN5',
+      },
+      {
+        'title': 'Sistem Operasi dan Anda: Menjadi Pengguna yang Berdaya',
+        'thumbnail': 'images/certificates/soa.png',
+        'organizer': 'Coursera',
+        'date': 'May 21, 2022',
+        'link': 'https://coursera.org/verify/VV7ZL9A3QS3P',
+      },
+      {
+        'title': 'Administrasi Sistem dan Layanan Infrastruktur TI',
+        'thumbnail': 'images/certificates/asli.png',
+        'organizer': 'Coursera',
+        'date': 'May 22, 2022',
+        'link': 'https://coursera.org/verify/QEHU8XJFSMKG',
+      },
+      {
+        'title': 'Keamanan IT: Pertahanan terhadap Kejahatan Digital',
+        'thumbnail': 'images/certificates/kit.png',
+        'organizer': 'Coursera',
+        'date': 'May 22, 2022',
+        'link': 'https://coursera.org/verify/CVZF78SWLRJK',
+      },
+      {
+        'title': 'IT Support Google',
+        'thumbnail': 'images/certificates/its.png',
+        'organizer': 'Coursera',
+        'date': 'May 22, 2022',
+        'link': 'https://coursera.org/verify/professional-cert/JDA6FNCPNTKM',
+      },
+    ];
+
+    return Scaffold(
+      body: MouseRegion(
+        onHover: (details) {
+          context.read<ThemeViewModel>().updateCursorPosition(details.position);
+        },
+        child: Stack(
+          alignment: Alignment.topCenter,
+          children: <Widget>[
+            Positioned(
+              left: context.watch<ThemeViewModel>().dx - 400,
+              top: context.watch<ThemeViewModel>().dy - 400,
+              child: Container(
+                width: 800,
+                height: 800,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: colorScheme.primary.withOpacity(0.04),
+                ),
+              ),
+            ),
+            Container(
+              color: colorScheme.primary.withOpacity(0.005),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
+                child: Container(
+                  decoration:
+                      BoxDecoration(color: Colors.white.withOpacity(0.0)),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: SizedBox(
+                width: 1000,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 500,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 80),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 10),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          Container(
+                                            width: 180,
+                                            height: 180,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(360),
+                                              color: colorScheme.primary
+                                                  .withOpacity(0.05),
+                                            ),
+                                          ),
+                                          Image.asset(
+                                            'images/profile-nobg-cropped.png',
+                                            width: 250,
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Raihan Rabbani',
+                                              style: textTheme.displayLarge,
+                                            ),
+                                            const SizedBox(
+                                                width: 200, child: Divider()),
+                                            ...roleItems
+                                                .map((e) => Text(
+                                                      e,
+                                                      style:
+                                                          textTheme.titleSmall,
+                                                    ))
+                                                .toList()
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(bottom: 5),
+                                  child: Text(
+                                    AppLocale.moto1.getString(context),
+                                    style: bodyLarge,
+                                  ),
+                                ),
+                                Row(
+                                  children: contactItems
+                                      .map((e) => IconButton(
+                                            onPressed: () => _url(e.url),
+                                            icon: e.icon,
+                                          ))
+                                      .toList(),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                FilledButton.icon(
+                                    onPressed: () {},
+                                    icon: const Icon(
+                                      Icons.cloud_download_outlined,
+                                    ),
+                                    label: const Text(
+                                      'Download Resume',
+                                      style: TextStyle(fontWeight: FontWeight.bold,fontSize: 12),
+                                    )),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 500,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 80),
+                        child: ScrollConfiguration(
+                          behavior: ScrollConfiguration.of(context)
+                              .copyWith(scrollbars: false),
+                          child: SingleChildScrollView(
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 0, 20, 80),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 15),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        RichText(
+                                          text: TextSpan(
+                                            style: bodyLarge,
+                                            children: <TextSpan>[
+                                              TextSpan(
+                                                text: AppLocale.introduction1
+                                                    .getString(context),
+                                              ),
+                                              TextSpan(
+                                                text: AppLocale.highlight1
+                                                    .getString(context),
+                                                style: TextStyle(
+                                                  color: colorScheme.onSurface,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: AppLocale.introduction2
+                                                    .getString(context),
+                                              ),
+                                              TextSpan(
+                                                text: AppLocale.highlight2
+                                                    .getString(context),
+                                                style: TextStyle(
+                                                  color: colorScheme.onSurface,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        RichText(
+                                          text: TextSpan(
+                                            style: bodyLarge,
+                                            children: <TextSpan>[
+                                              TextSpan(
+                                                text: AppLocale.introduction3
+                                                    .getString(context),
+                                              ),
+                                              TextSpan(
+                                                text: AppLocale.highlight3
+                                                    .getString(context),
+                                                style: TextStyle(
+                                                  color: colorScheme.onSurface,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: AppLocale.introduction4
+                                                    .getString(context),
+                                              ),
+                                              TextSpan(
+                                                text: AppLocale.highlight4
+                                                    .getString(context),
+                                                style: TextStyle(
+                                                  color: colorScheme.onSurface,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: AppLocale.introduction5
+                                                    .getString(context),
+                                              ),
+                                              TextSpan(
+                                                text: AppLocale.highlight5
+                                                    .getString(context),
+                                                style: TextStyle(
+                                                  color: colorScheme.onSurface,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: AppLocale.introduction6
+                                                    .getString(context),
+                                              ),
+                                              TextSpan(
+                                                text: AppLocale.highlight6
+                                                    .getString(context),
+                                                style: TextStyle(
+                                                  color: colorScheme.onSurface,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: AppLocale.introduction7
+                                                    .getString(context),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                          AppLocale.introduction8
+                                              .getString(context),
+                                          style: bodyLarge,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Column(
+                                    children: jobExperiences
+                                        .asMap()
+                                        .entries
+                                        .toList()
+                                        .reversed
+                                        .map<Widget>((e) {
+                                      int index = e.key + 1;
+                                      Map<String, dynamic> value = e.value;
+                                      bool isHover = index ==
+                                          context
+                                              .watch<ThemeViewModel>()
+                                              .indexJobExperince;
+                                      final bool isIgnored = (context
+                                                  .watch<ThemeViewModel>()
+                                                  .indexJobExperince >
+                                              0 &&
+                                          index !=
+                                              context
+                                                  .watch<ThemeViewModel>()
+                                                  .indexJobExperince);
+                                      return MouseRegion(
+                                        onEnter: (_) => context
+                                            .read<ThemeViewModel>()
+                                            .setIndexJobExperience(index),
+                                        onExit: (_) => context
+                                            .read<ThemeViewModel>()
+                                            .setIndexJobExperience(0),
+                                        child: GestureDetector(
+                                          onTap: () => _url(value['link']),
+                                          child: AnimatedContainer(
+                                            duration: const Duration(
+                                                milliseconds: 100),
+                                            curve: Curves.easeIn,
+                                            padding: const EdgeInsets.all(10),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              color: isHover
+                                                  ? colorScheme.primary
+                                                      .withOpacity(0.03)
+                                                  : Colors.transparent,
+                                            ),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                SizedBox(
+                                                  width: 150,
+                                                  child: Text(
+                                                    value['date'],
+                                                    style: isHover
+                                                        ? bodySmall.copyWith(
+                                                            color: colorScheme
+                                                                .onSurface
+                                                                .withOpacity(
+                                                                    0.7))
+                                                        : (isIgnored
+                                                            ? bodySmall.copyWith(
+                                                                color: colorScheme
+                                                                    .onSurface
+                                                                    .withOpacity(
+                                                                        0.2))
+                                                            : bodySmall),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        value['title'],
+                                                        style: isHover
+                                                            ? textTheme
+                                                                .titleSmall!
+                                                                .copyWith(
+                                                                    color: colorScheme
+                                                                        .primary)
+                                                            : (isIgnored
+                                                                ? textTheme
+                                                                    .titleSmall!
+                                                                    .copyWith(
+                                                                        color: colorScheme
+                                                                            .onSurface
+                                                                            .withOpacity(
+                                                                                0.2))
+                                                                : textTheme
+                                                                    .titleSmall),
+                                                      ),
+                                                      Text(
+                                                        value['role'],
+                                                        style: isHover
+                                                            ? titleSmall.copyWith(
+                                                                color: colorScheme
+                                                                    .onSurface
+                                                                    .withOpacity(
+                                                                        0.8))
+                                                            : (isIgnored
+                                                                ? titleSmall.copyWith(
+                                                                    color: colorScheme
+                                                                        .onSurface
+                                                                        .withOpacity(
+                                                                            0.2))
+                                                                : titleSmall),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 5,
+                                                      ),
+                                                      Text(
+                                                        value['jobdesc'],
+                                                        style: isHover
+                                                            ? bodyLargeExperience.copyWith(
+                                                                color: colorScheme
+                                                                    .onSurface
+                                                                    .withOpacity(
+                                                                        0.8))
+                                                            : (isIgnored
+                                                                ? bodyLargeExperience.copyWith(
+                                                                    color: colorScheme
+                                                                        .onSurface
+                                                                        .withOpacity(
+                                                                            0.2))
+                                                                : bodyLargeExperience),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 10,
+                                                      ),
+                                                      Wrap(
+                                                        runAlignment:
+                                                            WrapAlignment
+                                                                .center,
+                                                        runSpacing: 8,
+                                                        spacing: 8,
+                                                        children:
+                                                            value['badgeSkill']
+                                                                .map<Widget>(
+                                                                    (e) {
+                                                          return Chip(
+                                                            side: const BorderSide(
+                                                                color: Colors
+                                                                    .transparent),
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          20),
+                                                            ),
+                                                            label: Text(
+                                                              e,
+                                                              style: textTheme.labelSmall!.copyWith(
+                                                                  color: isHover
+                                                                      ? colorScheme
+                                                                          .primary
+                                                                      : (isIgnored
+                                                                          ? colorScheme.primary.withOpacity(
+                                                                              0.1)
+                                                                          : colorScheme.primary.withOpacity(
+                                                                              0.8)),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                            backgroundColor: isHover
+                                                                ? colorScheme
+                                                                    .primary
+                                                                    .withOpacity(
+                                                                        0.2)
+                                                                : (isIgnored
+                                                                    ? colorScheme
+                                                                        .primary
+                                                                        .withOpacity(
+                                                                            0.08)
+                                                                    : colorScheme
+                                                                        .secondary
+                                                                        .withOpacity(
+                                                                            0.08)),
+                                                            elevation: 0,
+                                                          );
+                                                        }).toList(),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 8),
+                                    child: Text(
+                                      AppLocale.nav1.getString(context),
+                                      style: textTheme.titleMedium,
+                                    ),
+                                  ),
+                                  Column(
+                                    children: projects
+                                        .asMap()
+                                        .entries
+                                        .toList()
+                                        .reversed
+                                        .map<Widget>((e) {
+                                      int index = e.key + 1;
+                                      Map<String, dynamic> value = e.value;
+                                      Map<String, dynamic> detail =
+                                          value['detail'];
+                                      bool isHover = index ==
+                                          context
+                                              .watch<ThemeViewModel>()
+                                              .indexProject;
+                                      final bool isIgnored = (context
+                                                  .watch<ThemeViewModel>()
+                                                  .indexProject >
+                                              0 &&
+                                          index !=
+                                              context
+                                                  .watch<ThemeViewModel>()
+                                                  .indexProject);
+                                      return MouseRegion(
+                                        onEnter: (_) => context
+                                            .read<ThemeViewModel>()
+                                            .setIndexProject(index),
+                                        onExit: (_) => context
+                                            .read<ThemeViewModel>()
+                                            .setIndexProject(0),
+                                        child: GestureDetector(
+                                          onTap: () => _url(detail['link']),
+                                          child: AnimatedContainer(
+                                            duration: const Duration(
+                                                milliseconds: 100),
+                                            curve: Curves.easeIn,
+                                            padding: const EdgeInsets.all(10),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              color: isHover
+                                                  ? colorScheme.primary
+                                                      .withOpacity(0.03)
+                                                  : Colors.transparent,
+                                            ),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 8),
+                                                  child: CircleAvatar(
+                                                    radius: 50,
+                                                    backgroundColor:
+                                                        Colors.transparent,
+                                                    backgroundImage: AssetImage(
+                                                        value['thumbnail']),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Row(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                value['title'],
+                                                                style: isHover
+                                                                    ? textTheme
+                                                                        .titleMedium!
+                                                                        .copyWith(
+                                                                            color: colorScheme
+                                                                                .primary)
+                                                                    : (isIgnored
+                                                                        ? textTheme
+                                                                            .titleMedium!
+                                                                            .copyWith(color: colorScheme.onSurface.withOpacity(0.2))
+                                                                        : textTheme.titleMedium),
+                                                              ),
+                                                              AnimatedPadding(
+                                                                curve: Curves
+                                                                    .easeIn,
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        left: isHover
+                                                                            ? 8
+                                                                            : 2),
+                                                                duration:
+                                                                    const Duration(
+                                                                        milliseconds:
+                                                                            100),
+                                                                child: Icon(
+                                                                    Icons.link,
+                                                                    size: 12,
+                                                                    color: isHover
+                                                                        ? colorScheme
+                                                                            .primary
+                                                                        : (isIgnored
+                                                                            ? colorScheme.onSurface.withOpacity(0.2)
+                                                                            : colorScheme.onSurface)),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          Row(
+                                                            children: [
+                                                              Text(
+                                                                value['year'],
+                                                                style: isHover
+                                                                    ? titleSmall.copyWith(
+                                                                        color: colorScheme
+                                                                            .onSurface
+                                                                            .withOpacity(
+                                                                                0.8))
+                                                                    : (isIgnored
+                                                                        ? titleSmall.copyWith(
+                                                                            color:
+                                                                                colorScheme.onSurface.withOpacity(0.2))
+                                                                        : titleSmall),
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .symmetric(
+                                                                    horizontal:
+                                                                        4),
+                                                                child: Text(
+                                                                  '|',
+                                                                  style:
+                                                                      tinyLabel,
+                                                                ),
+                                                              ),
+                                                              Text(
+                                                                detail[
+                                                                    'duration'],
+                                                                style:
+                                                                    tinyLabel,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      SizedBox(
+                                                        child: Text(
+                                                          value['description'],
+                                                          style: isHover
+                                                              ? bodyLargeExperience.copyWith(
+                                                                  color: colorScheme
+                                                                      .onSurface
+                                                                      .withOpacity(
+                                                                          0.8))
+                                                              : (isIgnored
+                                                                  ? bodyLargeExperience.copyWith(
+                                                                      color: colorScheme
+                                                                          .onSurface
+                                                                          .withOpacity(
+                                                                              0.2))
+                                                                  : bodyLargeExperience),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 10,
+                                                      ),
+                                                      Wrap(
+                                                        runAlignment:
+                                                            WrapAlignment
+                                                                .center,
+                                                        runSpacing: 8,
+                                                        spacing: 8,
+                                                        children: detail[
+                                                                'badgeTechnology']
+                                                            .map<Widget>((e) {
+                                                          return Chip(
+                                                            side: const BorderSide(
+                                                                color: Colors
+                                                                    .transparent),
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          20),
+                                                            ),
+                                                            label: Text(
+                                                              e,
+                                                              style: textTheme.labelSmall!.copyWith(
+                                                                  color: isHover
+                                                                      ? colorScheme
+                                                                          .primary
+                                                                      : (isIgnored
+                                                                          ? colorScheme.primary.withOpacity(
+                                                                              0.1)
+                                                                          : colorScheme.primary.withOpacity(
+                                                                              0.8)),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                            backgroundColor: isHover
+                                                                ? colorScheme
+                                                                    .primary
+                                                                    .withOpacity(
+                                                                        0.2)
+                                                                : (isIgnored
+                                                                    ? colorScheme
+                                                                        .primary
+                                                                        .withOpacity(
+                                                                            0.08)
+                                                                    : colorScheme
+                                                                        .secondary
+                                                                        .withOpacity(
+                                                                            0.08)),
+                                                            elevation: 0,
+                                                          );
+                                                        }).toList(),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 8),
+                                    child: Text(
+                                      AppLocale.nav2.getString(context),
+                                      style: textTheme.titleMedium,
+                                    ),
+                                  ),
+                                  
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 20),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        RichText(
+                                          text: TextSpan(
+                                            style: bodySmall,
+                                            children: [
+                                              TextSpan(
+                                                text: AppLocale.footer1
+                                                    .getString(context),
+                                              ),
+                                              TextSpan(
+                                                text: "Brittany Chiang.",
+                                                style: TextStyle(
+                                                    color:
+                                                        colorScheme.onSurface,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                                recognizer: TapGestureRecognizer()
+                                                  ..onTap = () => _url(
+                                                      'https://brittanychiang.com/'),
+                                              ),
+                                              TextSpan(
+                                                text: AppLocale.footer2
+                                                    .getString(context),
+                                              ),
+                                              const TextSpan(
+                                                text: "❤️",
+                                                style: TextStyle(
+                                                    color: Colors.red),
+                                              ),
+                                              TextSpan(
+                                                text: AppLocale.footer3
+                                                    .getString(context),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 40, 40),
+              child: Align(
+                alignment: Alignment.topRight,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    FloatingActionButton.extended(
+                      onPressed: () =>context.read<AppLang>().changeLanguage(),
+                      label:  Text(context.watch<AppLang>().countryCode,style: const TextStyle(fontWeight: FontWeight.bold),),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    FloatingActionButton(
+                      onPressed: () {},
+                      child: const Icon(Icons.color_lens_outlined),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    FloatingActionButton(
+                      onPressed: () {},
+                      child: const Icon(Icons.light_mode_outlined),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
