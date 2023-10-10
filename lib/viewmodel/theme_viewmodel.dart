@@ -65,30 +65,14 @@ class ThemeViewModel with ChangeNotifier {
     _mainColor = colors.elementAt(colorState);
     notifyListeners();
   }
-  static const double mobileViewPort = 400;
- static const double tabletViewPort = 700;
- static const double desktopViewport = 1060;
+  
 
  double _currentViewPort = 0;
  double get currentViewPort => _currentViewPort;
 
-  Widget screenMode({required BuildContext context, required Widget desktop, required Widget tablet, required Widget mobile }) {
-    final double screenWidth = MediaQuery.of(context).size.width;
-    final Widget child;
-    if (screenWidth < tabletViewPort){
-      child = mobile;
-      _currentViewPort = mobileViewPort;
-      notifyListeners();
-    } else if (screenWidth < desktopViewport){
-      child = tablet;
-      _currentViewPort = tabletViewPort;
-      notifyListeners();
-    } else {
-      child = desktop;
-      _currentViewPort = desktopViewport;
-      notifyListeners();
-    }
-    return child;
-  } 
+  void setCurrentViewPort(double width){
+    _currentViewPort = width;
+    notifyListeners();
+  }
 }
 

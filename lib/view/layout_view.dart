@@ -11,6 +11,7 @@ import 'package:raihanrabbani001/view/header_view.dart';
 import 'package:raihanrabbani001/view/job_view.dart';
 import 'package:raihanrabbani001/view/moto_view.dart';
 import 'package:raihanrabbani001/view/project_view.dart';
+import 'package:raihanrabbani001/view/screen_view.dart';
 import 'package:raihanrabbani001/viewmodel/theme_viewmodel.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -23,6 +24,7 @@ class LayoutView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     TextTheme textTheme = Theme.of(context).textTheme;
     TextStyle bodyLargeLabel = textTheme.bodyLarge!.copyWith(
@@ -30,37 +32,151 @@ class LayoutView extends StatelessWidget {
       height: 3,
     );
 
-    Container primaryContainer(
-        {required Widget child, required EdgeInsetsGeometry padding, double? height}) {
-      return Container(
-        width: context.watch<ThemeViewModel>().currentViewPort,
-        height: height,
-        padding: padding,
-        child: child,
-      );
-    }
 
-    Stack secondaryContainer({required Widget child, required double height}) {
-      return Stack(
-        alignment: Alignment.topCenter,
-        children: [
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 100),
-            height: height,
-            color: colorScheme.surface.withOpacity(0.5),
+    Widget child() {
+      final double screenWidth = MediaQuery.of(context).size.width;
+      final Widget child;
+      final Widget mobile = ScreenView(
+        screenMode: ScreenMode.mobile,
+        primaryChild: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const HeaderView(),
+              const AvatarView(),
+              CredentialView(url: (String url) => _url(url)),
+              MotoView(
+                bodyLargeLabel: bodyLargeLabel,
+                url: (String url) => _url(url),
+              ),
+            ],
           ),
-          Container(
-            width: context.watch<ThemeViewModel>().currentViewPort,
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            height: height,
-            child: child,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            children: [
+              AboutView(bodyLargeLabel: bodyLargeLabel),
+              JobView(
+                url: (String url) => _url(url),
+                top: true,
+              ),
+              ProjectView(
+                  url: (String url) => _url(url),
+                  bodyLargeLabel: bodyLargeLabel),
+              CertificateView(
+                bodyLargeLabel: bodyLargeLabel,
+                url: (String url) => _url(url),
+                top: true,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              const FooterView(),
+            ],
           ),
-        ],
+        ),
       );
-    }
 
-    Size size = MediaQuery.of(context).size;
+      final Widget tablet = ScreenView(
+        screenMode: ScreenMode.tablet,
+        primaryChild: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const HeaderView(),
+            Row(
+              children: [
+                const AvatarView(),
+                CredentialView(url: (String url) => _url(url)),
+              ],
+            ),
+            MotoView(
+              bodyLargeLabel: bodyLargeLabel,
+              url: (String url) => _url(url),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            AboutView(bodyLargeLabel: bodyLargeLabel),
+            JobView(
+              url: (String url) => _url(url),
+            ),
+            ProjectView(
+                url: (String url) => _url(url), bodyLargeLabel: bodyLargeLabel),
+            CertificateView(
+                bodyLargeLabel: bodyLargeLabel, url: (String url) => _url(url)),
+            const FooterView(),
+          ],
+        ),
+      );
+      final Widget desktop = ScreenView(
+        screenMode: ScreenMode.desktop,
+        primaryChild: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const HeaderView(),
+            Row(
+              children: [
+                CredentialView(url: (String url) => _url(url)),
+                const AvatarView(),
+                const SizedBox(
+                  width: 10,
+                ),
+                MotoView(
+                  bodyLargeLabel: bodyLargeLabel,
+                  url: (String url) => _url(url),
+                ),
+              ],
+            ),
+          ],
+        ),
+        
+        child: Column(
+          children: [
+            Row(
+              children: [
+                AboutView(
+                  bodyLargeLabel: bodyLargeLabel,
+                  flex: 1,
+                ),
+                JobView(
+                  url: (String url) => _url(url),
+                  height: 350,
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                CertificateView(
+                  bodyLargeLabel: bodyLargeLabel,
+                  url: (String url) => _url(url),
+                  flex: 1,
+                  height: 300,
+                ),
+                ProjectView(
+                  url: (String url) => _url(url),
+                  bodyLargeLabel: bodyLargeLabel,
+                  flex: 1,
+                  height: 300,
+                ),
+              ],
+            ),
+            const FooterView(),
+          ],
+        ),
+      );
+      if (screenWidth < 700) {
+        child = mobile;
+      } else if (screenWidth < 1060) {
+        child = tablet;
+      } else {
+        child = desktop;
+      }
+      
+      return child;
+    }
 
     return Scaffold(
       body: MouseRegion(
@@ -92,172 +208,9 @@ class LayoutView extends StatelessWidget {
                 ),
               ),
             ),
-            ScrollConfiguration(
-              behavior:
-                  ScrollConfiguration.of(context).copyWith(scrollbars: false),
-              child: SingleChildScrollView(
-                child: context.watch<ThemeViewModel>().screenMode(
-                      context: context,
-                      desktop: Column(
-                        children: [
-                          primaryContainer(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const HeaderView(),
-                                  Row(
-                                    children: [
-                                      CredentialView(
-                                          url: (String url) => _url(url)),
-                                      const AvatarView(),
-                                      const SizedBox(
-                                        width: 20,
-                                      ),
-                                      MotoView(
-                                      bodyLargeLabel: bodyLargeLabel,
-                                      url: (String url) => _url(url),
-                                    ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              padding: const EdgeInsets.only(top: 40)),
-                          secondaryContainer(
-                            child: Column(
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    AboutView(bodyLargeLabel: bodyLargeLabel, flex: 1,),
-                                   JobView(
-                                  url: (String url) => _url(url),
-                                  height: 250,
-                                ),
-                                  ],
-                                ),
-                                 
-                                ProjectView(
-                                    url: (String url) => _url(url),
-                                    bodyLargeLabel: bodyLargeLabel),
-                                CertificateView(
-                                    bodyLargeLabel: bodyLargeLabel,
-                                    url: (String url) => _url(url)),
-                                const FooterView(),
-                              ],
-                            ),
-                            height: 1050,
-                          ),
-                        ],
-                      ),
-                      tablet: Column(
-                        children: [
-                          primaryContainer(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const HeaderView(),
-                                  Row(
-                                    children: [
-                                      const AvatarView(),
-                                      const SizedBox(
-                                        width: 20,
-                                      ),
-                                      CredentialView(
-                                          url: (String url) => _url(url)),
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 20),
-                                    child: MotoView(
-                                      bodyLargeLabel: bodyLargeLabel,
-                                      url: (String url) => _url(url),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 60,
-                                  ),
-                                ],
-                              ),
-                              padding: const EdgeInsets.only(top: 40)),
-                          secondaryContainer(
-                            child: Column(
-                              children: [
-                                AboutView(bodyLargeLabel: bodyLargeLabel),
-                                JobView(
-                                  url: (String url) => _url(url),
-                                ),
-                                ProjectView(
-                                    url: (String url) => _url(url),
-                                    bodyLargeLabel: bodyLargeLabel),
-                                CertificateView(
-                                    bodyLargeLabel: bodyLargeLabel,
-                                    url: (String url) => _url(url)),
-                                const FooterView(),
-                              ],
-                            ),
-                            height: 1700,
-                          ),
-                        ],
-                      ),
-                      mobile: Column(
-                        children: [
-                          primaryContainer(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const HeaderView(),
-                                    const AvatarView(),
-                                    CredentialView(
-                                        url: (String url) => _url(url)),
-                                    MotoView(
-                                      bodyLargeLabel: bodyLargeLabel,
-                                      url: (String url) => _url(url),
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              padding: const EdgeInsets.only(top: 40), height: 850),
-                          secondaryContainer(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
-                              child: Column(
-                                children: [
-                                  AboutView(bodyLargeLabel: bodyLargeLabel),
-                                  JobView(
-                                    url: (String url) => _url(url),
-                                    top: true,
-                                  ),
-                                  ProjectView(
-                                      url: (String url) => _url(url),
-                                      bodyLargeLabel: bodyLargeLabel),
-                                  CertificateView(
-                                      bodyLargeLabel: bodyLargeLabel,
-                                      url: (String url) => _url(url),top: true,),
-                                      const SizedBox(height: 20,),
-                                  const FooterView(),
-                                ],
-                              ),
-                            ),
-                            height: 2100,
-                          ),
-                        ],
-                      ),
-                    ),
-              ),
+            SingleChildScrollView(
+              child: child(),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(size.width.toString()),
-                Text(
-                    context.watch<ThemeViewModel>().currentViewPort.toString()),
-              ],
-            )
           ],
         ),
       ),

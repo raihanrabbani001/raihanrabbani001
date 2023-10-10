@@ -6,10 +6,12 @@ import 'package:raihanrabbani001/viewmodel/theme_viewmodel.dart';
 
 class CertificateView extends StatelessWidget {
   const CertificateView(
-      {super.key, required this.bodyLargeLabel, required this.url, this.top = false});
+      {super.key, required this.bodyLargeLabel, required this.url, this.top = false,this.height, this.flex = 0});
   final void Function(String) url;
   final TextStyle bodyLargeLabel;
   final bool top;
+  final double? height;
+  final int flex;
 
   @override
   Widget build(BuildContext context) {
@@ -112,175 +114,178 @@ class CertificateView extends StatelessWidget {
     ];
     
     
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            AppLocale.nav3.getString(context),
-            style: bodyLargeLabel,
-          ),
-          SizedBox(
-            height: 300,
-            child: SingleChildScrollView(
-              child: Column(
-                children: certificates
-                    .asMap()
-                    .entries
-                    .toList()
-                    .reversed
-                    .map<Widget>((e) {
-                  int index = e.key + 1;
-                  Map<String, dynamic> value = e.value;
-                  bool isHover =
-                      index == context.watch<ThemeViewModel>().indexAchievement;
-                  final bool isIgnored =
-                      (context.watch<ThemeViewModel>().indexAchievement > 0 &&
-                          index !=
-                              context.watch<ThemeViewModel>().indexAchievement);
-                  return MouseRegion(
-                    onEnter: (_) =>
-                        context.read<ThemeViewModel>().setIndexAchievement(index),
-                    onExit: (_) =>
-                        context.read<ThemeViewModel>().setIndexAchievement(0),
-                    child: GestureDetector(
-                      onTap: () => url(value['link']),
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 100),
-                        curve: Curves.easeIn,
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: isHover
-                              ? colorScheme.primary.withOpacity(0.03)
-                              : Colors.transparent,
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 8),
-                              child: Image.asset(
-                                value['thumbnail'],
+    return Expanded(
+      flex: flex,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              AppLocale.nav3.getString(context),
+              style: bodyLargeLabel,
+            ),
+            SizedBox(
+              height: height,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: certificates
+                      .asMap()
+                      .entries
+                      .toList()
+                      .reversed
+                      .map<Widget>((e) {
+                    int index = e.key + 1;
+                    Map<String, dynamic> value = e.value;
+                    bool isHover =
+                        index == context.watch<ThemeViewModel>().indexAchievement;
+                    final bool isIgnored =
+                        (context.watch<ThemeViewModel>().indexAchievement > 0 &&
+                            index !=
+                                context.watch<ThemeViewModel>().indexAchievement);
+                    return MouseRegion(
+                      onEnter: (_) =>
+                          context.read<ThemeViewModel>().setIndexAchievement(index),
+                      onExit: (_) =>
+                          context.read<ThemeViewModel>().setIndexAchievement(0),
+                      child: GestureDetector(
+                        onTap: () => url(value['link']),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 100),
+                          curve: Curves.easeIn,
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: isHover
+                                ? colorScheme.primary.withOpacity(0.03)
+                                : Colors.transparent,
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 8),
+                                child: Image.asset(
+                                  value['thumbnail'],
+                                ),
                               ),
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  top ? Text(
-                                            value['date'],
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    top ? Text(
+                                              value['date'],
+                                              style: isHover
+                                                  ? textTheme.labelSmall!.copyWith(
+                                                      color: colorScheme.onSurface
+                                                          .withOpacity(0.8))
+                                                  : (isIgnored
+                                                      ? textTheme.labelSmall!
+                                                          .copyWith(
+                                                              color: colorScheme
+                                                                  .onSurface
+                                                                  .withOpacity(0.2))
+                                                      : textTheme.labelSmall),
+                                            ) : const SizedBox(),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          width: 150,
+                                          child: Text(
+                                            value['title'],
                                             style: isHover
-                                                ? textTheme.labelSmall!.copyWith(
-                                                    color: colorScheme.onSurface
-                                                        .withOpacity(0.8))
+                                                ? textTheme.titleMedium!.copyWith(
+                                                    color: colorScheme.primary)
                                                 : (isIgnored
-                                                    ? textTheme.labelSmall!
+                                                    ? textTheme.titleMedium!
                                                         .copyWith(
                                                             color: colorScheme
                                                                 .onSurface
                                                                 .withOpacity(0.2))
-                                                    : textTheme.labelSmall),
-                                          ) : const SizedBox(),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width: 150,
-                                        child: Text(
-                                          value['title'],
-                                          style: isHover
-                                              ? textTheme.titleMedium!.copyWith(
-                                                  color: colorScheme.primary)
-                                              : (isIgnored
-                                                  ? textTheme.titleMedium!
-                                                      .copyWith(
-                                                          color: colorScheme
-                                                              .onSurface
-                                                              .withOpacity(0.2))
-                                                  : textTheme.titleMedium),
+                                                    : textTheme.titleMedium),
+                                          ),
                                         ),
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          AnimatedContainer(
-                                            duration:
-                                                const Duration(milliseconds: 100),
-                                            curve: Curves.easeInCirc,
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 4, horizontal: 8),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                              color: isHover
-                                                  ? colorScheme.primary
-                                                      .withOpacity(0.05)
-                                                  : Colors.transparent,
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            AnimatedContainer(
+                                              duration:
+                                                  const Duration(milliseconds: 100),
+                                              curve: Curves.easeInCirc,
+                                              padding: const EdgeInsets.symmetric(
+                                                  vertical: 4, horizontal: 8),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                color: isHover
+                                                    ? colorScheme.primary
+                                                        .withOpacity(0.05)
+                                                    : Colors.transparent,
+                                              ),
+                                              child: Text(
+                                                AppLocale.achievement
+                                                    .getString(context),
+                                                style: TextStyle(
+                                                    color: isHover
+                                                        ? colorScheme.primary
+                                                        : Colors.transparent,
+                                                    fontSize: 8,
+                                                    fontWeight: FontWeight.bold),
+                                              ),
                                             ),
-                                            child: Text(
-                                              AppLocale.achievement
-                                                  .getString(context),
-                                              style: TextStyle(
-                                                  color: isHover
-                                                      ? colorScheme.primary
-                                                      : Colors.transparent,
-                                                  fontSize: 8,
-                                                  fontWeight: FontWeight.bold),
+                                            top ? const SizedBox() : Text(
+                                              value['date'],
+                                              style: isHover
+                                                  ? textTheme.labelSmall!.copyWith(
+                                                      color: colorScheme.onSurface
+                                                          .withOpacity(0.8))
+                                                  : (isIgnored
+                                                      ? textTheme.labelSmall!
+                                                          .copyWith(
+                                                              color: colorScheme
+                                                                  .onSurface
+                                                                  .withOpacity(0.2))
+                                                      : textTheme.labelSmall),
                                             ),
-                                          ),
-                                          top ? const SizedBox() : Text(
-                                            value['date'],
-                                            style: isHover
-                                                ? textTheme.labelSmall!.copyWith(
-                                                    color: colorScheme.onSurface
-                                                        .withOpacity(0.8))
-                                                : (isIgnored
-                                                    ? textTheme.labelSmall!
-                                                        .copyWith(
-                                                            color: colorScheme
-                                                                .onSurface
-                                                                .withOpacity(0.2))
-                                                    : textTheme.labelSmall),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    child: Text(
-                                      value['organizer'],
-                                      style: isHover
-                                          ? textTheme.bodySmall!.copyWith(
-                                              color: colorScheme.onSurface
-                                                  .withOpacity(0.8))
-                                          : (isIgnored
-                                              ? textTheme.bodySmall!.copyWith(
-                                                  color: colorScheme.onSurface
-                                                      .withOpacity(0.2))
-                                              : textTheme.bodySmall),
+                                          ],
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                ],
+                                    SizedBox(
+                                      child: Text(
+                                        value['organizer'],
+                                        style: isHover
+                                            ? textTheme.bodySmall!.copyWith(
+                                                color: colorScheme.onSurface
+                                                    .withOpacity(0.8))
+                                            : (isIgnored
+                                                ? textTheme.bodySmall!.copyWith(
+                                                    color: colorScheme.onSurface
+                                                        .withOpacity(0.2))
+                                                : textTheme.bodySmall),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                }).toList(),
+                    );
+                  }).toList(),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

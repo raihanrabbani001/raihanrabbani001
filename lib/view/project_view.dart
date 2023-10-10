@@ -6,9 +6,11 @@ import 'package:raihanrabbani001/viewmodel/theme_viewmodel.dart';
 
 class ProjectView extends StatelessWidget {
   const ProjectView(
-      {super.key, required this.url, required this.bodyLargeLabel});
+      {super.key, required this.url, required this.bodyLargeLabel, this.height, this.flex = 0});
   final void Function(String) url;
   final TextStyle bodyLargeLabel;
+  final double? height;
+  final int flex;
 
   @override
   Widget build(BuildContext context) {
@@ -50,196 +52,199 @@ class ProjectView extends StatelessWidget {
       }
     ];
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            AppLocale.nav2.getString(context),
-            style: bodyLargeLabel,
-          ),
-          SizedBox(
-            height: 250,
-            child: SingleChildScrollView(
-              child: Column(
-                children:
-                    projects.asMap().entries.toList().reversed.map<Widget>((e) {
-                  int index = e.key + 1;
-                  Map<String, dynamic> value = e.value;
-                  Map<String, dynamic> detail = value['detail'];
-                  bool isHover =
-                      index == context.watch<ThemeViewModel>().indexProject;
-                  final bool isIgnored =
-                      (context.watch<ThemeViewModel>().indexProject > 0 &&
-                          index != context.watch<ThemeViewModel>().indexProject);
-                  return MouseRegion(
-                    onEnter: (_) =>
-                        context.read<ThemeViewModel>().setIndexProject(index),
-                    onExit: (_) =>
-                        context.read<ThemeViewModel>().setIndexProject(0),
-                    child: GestureDetector(
-                      onTap: () => url(detail['link']),
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 100),
-                        curve: Curves.easeIn,
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: isHover
-                              ? colorScheme.primary.withOpacity(0.03)
-                              : Colors.transparent,
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 8),
-                              child: CircleAvatar(
-                                radius: 50,
-                                backgroundColor: Colors.transparent,
-                                backgroundImage: AssetImage(value['thumbnail']),
+    return Expanded(
+      flex: flex,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              AppLocale.nav2.getString(context),
+              style: bodyLargeLabel,
+            ),
+            SizedBox(
+              height: height,
+              child: SingleChildScrollView(
+                child: Column(
+                  children:
+                      projects.asMap().entries.toList().reversed.map<Widget>((e) {
+                    int index = e.key + 1;
+                    Map<String, dynamic> value = e.value;
+                    Map<String, dynamic> detail = value['detail'];
+                    bool isHover =
+                        index == context.watch<ThemeViewModel>().indexProject;
+                    final bool isIgnored =
+                        (context.watch<ThemeViewModel>().indexProject > 0 &&
+                            index != context.watch<ThemeViewModel>().indexProject);
+                    return MouseRegion(
+                      onEnter: (_) =>
+                          context.read<ThemeViewModel>().setIndexProject(index),
+                      onExit: (_) =>
+                          context.read<ThemeViewModel>().setIndexProject(0),
+                      child: GestureDetector(
+                        onTap: () => url(detail['link']),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 100),
+                          curve: Curves.easeIn,
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: isHover
+                                ? colorScheme.primary.withOpacity(0.03)
+                                : Colors.transparent,
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 8),
+                                child: CircleAvatar(
+                                  radius: 50,
+                                  backgroundColor: Colors.transparent,
+                                  backgroundImage: AssetImage(value['thumbnail']),
+                                ),
                               ),
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            value['title'],
-                                            style: isHover
-                                                ? textTheme.titleMedium!.copyWith(
-                                                    color: colorScheme.primary)
-                                                : (isIgnored
-                                                    ? textTheme.titleMedium!
-                                                        .copyWith(
-                                                            color: colorScheme
-                                                                .onSurface
-                                                                .withOpacity(0.2))
-                                                    : textTheme.titleMedium),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              value['title'],
+                                              style: isHover
+                                                  ? textTheme.titleMedium!.copyWith(
+                                                      color: colorScheme.primary)
+                                                  : (isIgnored
+                                                      ? textTheme.titleMedium!
+                                                          .copyWith(
+                                                              color: colorScheme
+                                                                  .onSurface
+                                                                  .withOpacity(0.2))
+                                                      : textTheme.titleMedium),
+                                            ),
+                                            AnimatedPadding(
+                                              curve: Curves.easeIn,
+                                              padding: EdgeInsets.only(
+                                                  left: isHover ? 8 : 2),
+                                              duration:
+                                                  const Duration(milliseconds: 100),
+                                              child: Icon(Icons.link,
+                                                  size: 12,
+                                                  color: isHover
+                                                      ? colorScheme.primary
+                                                      : (isIgnored
+                                                          ? colorScheme.onSurface
+                                                              .withOpacity(0.2)
+                                                          : colorScheme.onSurface)),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              value['year'],
+                                              style: isHover
+                                                  ? textTheme.titleSmall!.copyWith(
+                                                      color: colorScheme.onSurface
+                                                          .withOpacity(0.8))
+                                                  : (isIgnored
+                                                      ? textTheme.titleSmall!
+                                                          .copyWith(
+                                                              color: colorScheme
+                                                                  .onSurface
+                                                                  .withOpacity(0.2))
+                                                      : textTheme.titleSmall),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                  horizontal: 4),
+                                              child: Text(
+                                                '|',
+                                                style: textTheme.labelSmall,
+                                              ),
+                                            ),
+                                            Text(
+                                              detail['duration'],
+                                              style: textTheme.labelSmall,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      child: Text(
+                                        value['description'],
+                                        style: isHover
+                                            ? textTheme.bodySmall!.copyWith(
+                                                color: colorScheme.onSurface
+                                                    .withOpacity(0.8))
+                                            : (isIgnored
+                                                ? textTheme.bodySmall!.copyWith(
+                                                    color: colorScheme.onSurface
+                                                        .withOpacity(0.2))
+                                                : textTheme.bodySmall),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Wrap(
+                                      runAlignment: WrapAlignment.center,
+                                      runSpacing: 8,
+                                      spacing: 8,
+                                      children: detail['badgeTechnology']
+                                          .map<Widget>((e) {
+                                        return Chip(
+                                          side: const BorderSide(
+                                              color: Colors.transparent),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(20),
                                           ),
-                                          AnimatedPadding(
-                                            curve: Curves.easeIn,
-                                            padding: EdgeInsets.only(
-                                                left: isHover ? 8 : 2),
-                                            duration:
-                                                const Duration(milliseconds: 100),
-                                            child: Icon(Icons.link,
-                                                size: 12,
+                                          label: Text(
+                                            e,
+                                            style: textTheme.labelSmall!.copyWith(
                                                 color: isHover
                                                     ? colorScheme.primary
                                                     : (isIgnored
-                                                        ? colorScheme.onSurface
-                                                            .withOpacity(0.2)
-                                                        : colorScheme.onSurface)),
+                                                        ? colorScheme.primary
+                                                            .withOpacity(0.1)
+                                                        : colorScheme.primary
+                                                            .withOpacity(0.8)),
+                                                fontWeight: FontWeight.bold),
                                           ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            value['year'],
-                                            style: isHover
-                                                ? textTheme.titleSmall!.copyWith(
-                                                    color: colorScheme.onSurface
-                                                        .withOpacity(0.8))
-                                                : (isIgnored
-                                                    ? textTheme.titleSmall!
-                                                        .copyWith(
-                                                            color: colorScheme
-                                                                .onSurface
-                                                                .withOpacity(0.2))
-                                                    : textTheme.titleSmall),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 4),
-                                            child: Text(
-                                              '|',
-                                              style: textTheme.labelSmall,
-                                            ),
-                                          ),
-                                          Text(
-                                            detail['duration'],
-                                            style: textTheme.labelSmall,
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    child: Text(
-                                      value['description'],
-                                      style: isHover
-                                          ? textTheme.bodySmall!.copyWith(
-                                              color: colorScheme.onSurface
-                                                  .withOpacity(0.8))
-                                          : (isIgnored
-                                              ? textTheme.bodySmall!.copyWith(
-                                                  color: colorScheme.onSurface
-                                                      .withOpacity(0.2))
-                                              : textTheme.bodySmall),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Wrap(
-                                    runAlignment: WrapAlignment.center,
-                                    runSpacing: 8,
-                                    spacing: 8,
-                                    children: detail['badgeTechnology']
-                                        .map<Widget>((e) {
-                                      return Chip(
-                                        side: const BorderSide(
-                                            color: Colors.transparent),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(20),
-                                        ),
-                                        label: Text(
-                                          e,
-                                          style: textTheme.labelSmall!.copyWith(
-                                              color: isHover
+                                          backgroundColor: isHover
+                                              ? colorScheme.primary.withOpacity(0.2)
+                                              : (isIgnored
                                                   ? colorScheme.primary
-                                                  : (isIgnored
-                                                      ? colorScheme.primary
-                                                          .withOpacity(0.1)
-                                                      : colorScheme.primary
-                                                          .withOpacity(0.8)),
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        backgroundColor: isHover
-                                            ? colorScheme.primary.withOpacity(0.2)
-                                            : (isIgnored
-                                                ? colorScheme.primary
-                                                    .withOpacity(0.08)
-                                                : colorScheme.secondary
-                                                    .withOpacity(0.08)),
-                                        elevation: 0,
-                                      );
-                                    }).toList(),
-                                  ),
-                                ],
+                                                      .withOpacity(0.08)
+                                                  : colorScheme.secondary
+                                                      .withOpacity(0.08)),
+                                          elevation: 0,
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                }).toList(),
+                    );
+                  }).toList(),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
