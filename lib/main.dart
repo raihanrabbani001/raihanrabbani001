@@ -8,7 +8,9 @@ import 'package:raihanrabbani001/viewmodel/theme_viewmodel.dart';
 
 
 void main() {
-  runApp(MultiProvider(
+  runApp(
+    
+    MultiProvider(
     providers: [
       ChangeNotifierProvider(
         create: (_) => ThemeViewModel(),
