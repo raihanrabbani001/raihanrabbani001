@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:raihanrabbani001/viewmodel/theme_viewmodel.dart';
 
 enum ScreenMode {
   mobile,
